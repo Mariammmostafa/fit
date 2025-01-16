@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:untitled/Home/cart.dart';
 import 'package:untitled/Home/top_sports_details.dart';
 import 'package:untitled/Home/trainers_detail.dart';
 import 'package:untitled/Login_screen.dart';
@@ -70,6 +71,13 @@ class _HomeViewState extends State<HomeView> {
               color: Colors.white,
             ),
             onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>Cart(),
+                ),
+              );
+
             },
           ),
         ],

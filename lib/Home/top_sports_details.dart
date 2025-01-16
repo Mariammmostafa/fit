@@ -50,7 +50,7 @@ class TopSportsDetails extends StatelessWidget {
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      childAspectRatio: 1 / 1.3,
+                      childAspectRatio: 1 / 1.5,
                       mainAxisSpacing: 16.0,
                       crossAxisSpacing: 8.0,
                     ),
