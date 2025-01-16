@@ -18,6 +18,7 @@ class Layout extends StatefulWidget {
 class _LayoutState extends State<Layout> {
   @override
   int selectedindex = 0;
+
   void onitemtaped(int idex) {
     setState(() {
       selectedindex = idex;
@@ -31,6 +32,7 @@ class _LayoutState extends State<Layout> {
     const Profile(),
     const SettingsView(),
   ];
+
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     var mediaQuery = MediaQuery.of(context);
@@ -42,31 +44,31 @@ class _LayoutState extends State<Layout> {
         // new
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-              icon: Icon(
+              icon: const Icon(
                 Icons.home,
                 color: Colors.green,
               ),
               label: AppLocalizations.of(context)!.home),
           BottomNavigationBarItem(
-              icon: Icon(
+              icon: const Icon(
                 Icons.class_rounded,
                 color: Colors.green,
               ),
               label: AppLocalizations.of(context)!.classes),
           BottomNavigationBarItem(
-              icon: Icon(
+              icon: const Icon(
                 Icons.subscriptions_outlined,
                 color: Colors.green,
               ),
               label: AppLocalizations.of(context)!.subscriptions),
           BottomNavigationBarItem(
-              icon: Icon(
+              icon: const Icon(
                 Icons.person,
                 color: Colors.green,
               ),
               label: AppLocalizations.of(context)!.profile),
           BottomNavigationBarItem(
-              icon: Icon(
+              icon: const Icon(
                 Icons.settings,
                 color: Colors.green,
               ),
@@ -74,6 +76,7 @@ class _LayoutState extends State<Layout> {
         ],
         currentIndex: selectedindex,
         selectedItemColor: Colors.green,
+        backgroundColor: Colors.white,
         onTap: onitemtaped,
       ),
     );

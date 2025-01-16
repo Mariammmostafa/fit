@@ -10,7 +10,7 @@ class Sportclasswidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(2),
+        padding: const EdgeInsets.all(4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -45,9 +45,10 @@ class Sportclasswidget extends StatelessWidget {
             Row(
               children: [
                 Text("${data.hours}Hours"),
+                const SizedBox(width: 4),
                 Icon(Icons.schedule, color: Colors.green.shade600),
                 const Spacer(),
-                Text("${data.price}Egp"),
+                Text("${data.price} Egp"),
               ],
             ),
           ],

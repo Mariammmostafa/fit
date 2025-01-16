@@ -17,15 +17,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'firebase_options.dart';
 
-void main()
-  async {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-    WidgetsFlutterBinding.ensureInitialized();
-
-
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform
-    );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(
     ChangeNotifierProvider(
@@ -44,14 +39,15 @@ class MyApp extends StatelessWidget {
     var appProvider = Provider.of<AppProvider>(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      
       themeMode: ThemeMode.light,
-     
-      
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: Locale(appProvider.currentLocal),
       initialRoute: LoginScreen.routeName,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+        scaffoldBackgroundColor: Colors.white,
+      ),
       routes: {
         LoginScreen.routeName: (context) => LoginScreen(),
         RegisterView.routeName: (context) => RegisterView(),

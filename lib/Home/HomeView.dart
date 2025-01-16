@@ -45,8 +45,9 @@ class _HomeViewState extends State<HomeView> {
   final TextEditingController _searchController = TextEditingController();
   late Future<List<ToolData>> _sliderImagesFuture;
   late Future<List<InstructorData>> _teamImageFuture;
-  late  Future<List<InstructorData>> trainers;
+  late Future<List<InstructorData>> trainers;
   late Future<List<InstructorData>> _trainersFuture;
+
   @override
   void initState() {
     super.initState();
@@ -56,7 +57,7 @@ class _HomeViewState extends State<HomeView> {
     trainers = ApiManager.fetchTeam('card-url');
     _trainersFuture = ApiManager.fetchTeam('card-url');
     // _trainersFuture = [];
-        // ApiManager.fetchTeam('card-url'); // Fetch trainers from API
+    // ApiManager.fetchTeam('card-url'); // Fetch trainers from API
   }
 
   //List<Trainers> trainers = [
@@ -77,6 +78,7 @@ class _HomeViewState extends State<HomeView> {
     var mediaQuery = MediaQuery.of(context).size;
     User? user = FirebaseAuth.instance.currentUser;
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: const Color(0xFF39A552),
         title: const Text(
@@ -97,171 +99,83 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
       ),
-
       drawer: Drawer(
         child: Column(
           children: [
-
             UserAccountsDrawerHeader(
-
               accountName: Text(user?.displayName ?? " "),
               accountEmail: Text(user?.email ?? "No Email"),
-
               currentAccountPicture: CircleAvatar(
-                backgroundImage: NetworkImage(user?.photoURL ?? "https://www.example.com/default-avatar.png"),
-            ),
-              decoration: BoxDecoration(
+                backgroundImage: NetworkImage(user?.photoURL ??
+                    "https://www.example.com/default-avatar.png"),
+              ),
+              decoration: const BoxDecoration(
                 color: Colors.green,
               ),
             ),
-
             ListTile(
-              leading: Icon(Icons.exit_to_app),
-              title: Text("Sign Out"),
+              leading: const Icon(Icons.exit_to_app),
+              title: const Text("Sign Out"),
               onTap: () {
                 FirebaseAuth.instance.signOut();
-                Navigator.of(context).pushReplacementNamed(LoginScreen.routeName); // Navigate to login screen
+                Navigator.of(context).pushReplacementNamed(
+                    LoginScreen.routeName); // Navigate to login screen
               },
             ),
           ],
         ),
       ),
-
-
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Search Bar
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              child: TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: 'Search...',
-                  hintStyle: const TextStyle(
-                    fontFamily: "Poppins",
-                    fontSize: 14,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              // Search Bar
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Search...',
+                    hintStyle: const TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14,
+                    ),
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () => _searchController.clear(),
+                      color: Colors.grey,
+                    ),
+                    prefixIcon: IconButton(
+                      icon: const Icon(Icons.search),
+                      onPressed: () {},
+                    ),
+                    border: InputBorder.none,
                   ),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: () => _searchController.clear(),
-                    color: Colors.grey,
-                  ),
-                  prefixIcon: IconButton(
-                    icon: const Icon(Icons.search),
-                    onPressed: () {},
-                  ),
-                  border: InputBorder.none,
                 ),
               ),
-            ),
-            const SizedBox(height: 10),
+              const SizedBox(height: 16),
+              const Divider(),
+              const SizedBox(height: 16),
 
-            // Popular Classes Section
-            const Text(
-              "Popular Classes",
-              style: TextStyle(
-                color: Colors.black,
-                fontStyle: FontStyle.italic,
-                fontWeight: FontWeight.w700,
-                fontFamily: "Poppins-Medium",
+              const Text(
+                "Popular Classes",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: "Poppins-Medium",
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
+              const SizedBox(height: 16),
 
-            // Slider - Fetch images dynamically from API
-            FutureBuilder<List<ToolData>>(
-              future: _sliderImagesFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                }
-                if (snapshot.hasData) {
-                  var imageUrls = snapshot.data!;
-                  print("Fetched images: $imageUrls");
-                  if (imageUrls.isEmpty) return const Text("No images available");
-                  return Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: CarouselSlider.builder(
-                      options: CarouselOptions(height: 200, autoPlay: true),
-                      itemCount: imageUrls.length,
-                      itemBuilder: (context, index, realIndex) {
-            return buildImage(imageUrls[index], index); 
-                      },
-                    ),
-                  );
-                }
-                return const Center(child: Text('No images available.'));
-              },
-            ),
-            const SizedBox(height: 10),
-
-            // Top Sports Section
-            const Text(
-              "Top Sports",
-              style: TextStyle(
-                color: Colors.black,
-                fontStyle: FontStyle.italic,
-                fontWeight: FontWeight.w700,
-                fontFamily: "Poppins-Medium",
-              ),
-            ),
-            const SizedBox(height: 5),
-
-            // Cards for Popular Classes
-            SizedBox(
-              height: 200,
-              child: ListView.separated(
-                itemCount: items.length,
-                separatorBuilder: (context, _) => const SizedBox(width: 2),
-                itemBuilder: (context, index) => buildCard(items[index], context),
-                scrollDirection: Axis.horizontal,
-              ),
-            ),
-            // const SizedBox(height: 10),
-
-            // Top Trainers Section
-            // const Text(
-            //   "Top Trainers",
-            //   style: TextStyle(
-            //     color: Colors.black,
-            //     fontStyle: FontStyle.italic,
-            //     fontWeight: FontWeight.w700,
-            //     fontFamily: "Poppins-Medium",
-            //   ),
-            // ),
-            // Expanded(
-            //   child: ListView.separated(
-            //     itemCount: trainers.length,
-            //     separatorBuilder: (context, _) => const SizedBox(width: 2),
-            //     itemBuilder: (context, index) =>
-            //         buildTrainerCard(trainers[index], context),
-            //     scrollDirection: Axis.horizontal,
-            //   ),
-            // ),
-            // const SizedBox(height: 10),
-
-            
-            const Text(
-              "Top Trainers",
-              style: TextStyle(
-                color: Colors.black,
-                fontStyle: FontStyle.italic,
-                fontWeight: FontWeight.w700,
-                fontFamily: "Poppins-Medium",
-              ),
-            ),
-            SizedBox(
-              height: 150,
-              child: FutureBuilder<List<InstructorData>>(
-                future: _trainersFuture,
+              // Slider - Fetch images dynamically from API
+              FutureBuilder<List<ToolData>>(
+                future: _sliderImagesFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -270,73 +184,135 @@ class _HomeViewState extends State<HomeView> {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   }
                   if (snapshot.hasData) {
-                    var trainers = snapshot.data!;
-                    return ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: trainers.length,
-                      itemBuilder: (context, index) {
-                        final trainer = trainers[index];
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => TrainerFinalDetails(
-                                  trainer: trainer,
-                                ),
-                              ),
-                            );
-                          },
-                          child: Card(
-                            child: Column(
-                              children: [
-                                CircleAvatar(
-                                  radius: 40,
-                                  backgroundImage:
-                                      NetworkImage(trainer.img ?? ''),
-                                ),
-                                Text(trainer.fullName ?? 'Unknown'),
-                                Text(trainer.position ?? 'No Position'),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
+                    var imageUrls = snapshot.data!;
+                    print("Fetched images: $imageUrls");
+                    if (imageUrls.isEmpty)
+                      return const Text("No images available");
+                    return Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: CarouselSlider.builder(
+                        options: CarouselOptions(height: 200, autoPlay: true),
+                        itemCount: imageUrls.length,
+                        itemBuilder: (context, index, realIndex) {
+                          return buildImage(imageUrls[index], index);
+                        },
+                      ),
                     );
                   }
-                  return const Center(child: Text('No trainers available.'));
+                  return const Center(child: Text('No images available.'));
                 },
               ),
-            ),
-            /// ________
-            //  onTap: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //
-            //   builder: (context) => TrainersDetail(trainer: trainer, trainers: null,),
-          ],
+              const SizedBox(height: 16),
+              const Divider(),
+              const SizedBox(height: 16),
+
+              const Text(
+                "Top Sports",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: "Poppins-Medium",
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              SizedBox(
+                height: 200,
+                child: ListView.separated(
+                  itemCount: items.length,
+                  separatorBuilder: (context, _) => const SizedBox(width: 16),
+                  itemBuilder: (context, index) =>
+                      buildCard(items[index], context),
+                  scrollDirection: Axis.horizontal,
+                ),
+              ),
+
+              const SizedBox(height: 16),
+              const Divider(),
+              const SizedBox(height: 16),
+              const Text(
+                "Top Trainers",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: "Poppins-Medium",
+                ),
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                height: 170,
+                child: FutureBuilder<List<InstructorData>>(
+                  future: _trainersFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    }
+                    if (snapshot.hasData) {
+                      var trainers = snapshot.data!;
+                      return ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: trainers.length,
+                        itemBuilder: (context, index) {
+                          final trainer = trainers[index];
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TrainerFinalDetails(
+                                    trainer: trainer,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Card(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 16.0,horizontal: 8),
+                                child: Column(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 40,
+                                      backgroundImage:
+                                          NetworkImage(trainer.img ?? ''),
+                                    ),
+                                    Text(trainer.fullName ?? 'Unknown'),
+                                    Text(trainer.position ?? 'No Position'),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        separatorBuilder: (BuildContext context, int index) {
+                          return const SizedBox(width: 8);
+                        },
+                      );
+                    }
+                    return const Center(child: Text('No trainers available.'));
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
-
-    // );
-    //   },
-
-    //  ),
   }
 
   // Build Image for the Slider
 
   Widget buildImage(ToolData tool, int index) {
-  return Expanded(
-    child: Container(
+    return Container(
       width: 200,
       height: 300,
       color: Colors.grey,
       child: Stack(
         children: [
-          // الصورة (Image)
           CachedNetworkImage(
             imageUrl: tool.img!,
             fit: BoxFit.cover,
@@ -346,13 +322,11 @@ class _HomeViewState extends State<HomeView> {
               child: CircularProgressIndicator(),
             ),
             errorWidget: (context, url, error) => const Center(
-              child: Text('No image found', style: TextStyle(color: Colors.red)),
+              child:
+                  Text('No image found', style: TextStyle(color: Colors.red)),
             ),
           ),
-          
-        
         ],
-        ),
       ),
     );
   }
@@ -360,19 +334,12 @@ class _HomeViewState extends State<HomeView> {
   // Build Card for Popular Classes
   Container buildCard(CardItem item, BuildContext context) {
     return Container(
-      width: 120,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.blue[100],  // لون الخلفية
-        borderRadius: BorderRadius.circular(12),  // الزوايا الدائرية
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 5.0,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: Colors.grey,
+          )),
       child: GestureDetector(
         onTap: () {
           Navigator.push(
@@ -382,15 +349,9 @@ class _HomeViewState extends State<HomeView> {
             ),
           );
         },
- 
-
-
-        
         child: Image.asset(
           item.urlImage,
           fit: BoxFit.cover,
-          width: double.infinity,
-          height: double.infinity,
         ),
       ),
     );
@@ -398,18 +359,22 @@ class _HomeViewState extends State<HomeView> {
 
   Widget buildTrainerCard(InstructorData trainer, BuildContext context) {
     return Card(
-        child: ListTile(
+      child: ListTile(
         leading: CircleAvatar(
-        radius: 40,
-        backgroundImage: NetworkImage(trainer.img ?? ''),
-    ),
-    title: Text(
-    trainer.fullName?.isNotEmpty == true ? trainer.fullName! : "Unknown", // إذا كان الاسم فارغًا، عرض "Unknown"
-    ),
-    subtitle: Text(
-    trainer.position?.isNotEmpty == true ? trainer.position! : "Position not available", // إذا كانت الوظيفة فارغة، عرض "Position not available"
-    ),
+          radius: 40,
+          backgroundImage: NetworkImage(trainer.img ?? ''),
         ),
+        title: Text(
+          trainer.fullName?.isNotEmpty == true
+              ? trainer.fullName!
+              : "Unknown", // إذا كان الاسم فارغًا، عرض "Unknown"
+        ),
+        subtitle: Text(
+          trainer.position?.isNotEmpty == true
+              ? trainer.position!
+              : "Position not available", // إذا كانت الوظيفة فارغة، عرض "Position not available"
+        ),
+      ),
     );
   }
 }
