@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
         LoginScreen.routeName: (context) => LoginScreen(),
         RegisterView.routeName: (context) => RegisterView(),
         Layout.routeName: (context) => const Layout(),
-        HomeView.routeName: (context) => HomeView(),
+        HomeView.routeName: (context) => const HomeView(),
         Classes.routeName: (context) => const Classes(),
         Subscriptions.routeName: (context) => const Subscriptions(),
         Profile.routeName: (context) => const Profile(),

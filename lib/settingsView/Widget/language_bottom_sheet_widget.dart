@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:untitled/Provider/app_provider.dart';
@@ -34,8 +33,8 @@ class LanguageBottomSheetWidget extends StatelessWidget {
 
             child:
                 appProvider.currentLocal == "en" ?
-    SelectedOptionWidget(selectedTitle: "English") 
-                    : UnselectedOptionWidget(unSelectedTitle: "English"),
+    const SelectedOptionWidget(selectedTitle: "English") 
+                    : const UnselectedOptionWidget(unSelectedTitle: "English"),
           ),
          const SizedBox(
            height: 30,
@@ -49,8 +48,8 @@ class LanguageBottomSheetWidget extends StatelessWidget {
              child:
                  appProvider.currentLocal == "en" ?
 
-         UnselectedOptionWidget(unSelectedTitle: "عربي") :
-                 SelectedOptionWidget(selectedTitle: "عربي"),
+         const UnselectedOptionWidget(unSelectedTitle: "عربي") :
+                 const SelectedOptionWidget(selectedTitle: "عربي"),
 
          ),
         ],

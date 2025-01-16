@@ -2,7 +2,6 @@ import 'package:animate_do/animate_do.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled/CustomTextField/custom_text_field.dart';
-import 'package:untitled/Home/HomeView.dart';
 import 'package:untitled/Layout/layout.dart';
 
 import 'Register/register.dart';
@@ -129,7 +128,7 @@ class LoginScreen extends StatelessWidget {
                     delay: const Duration(milliseconds: 450),
                     child: MaterialButton(
                       onPressed: () async {
-                        if (formkey.currentState!.validate()) ;
+                        if (formkey.currentState!.validate()) {}
                         {
                           try {
                             // محاولة تسجيل الدخول باستخدام البريد الإلكتروني وكلمة المرور
@@ -147,13 +146,13 @@ class LoginScreen extends StatelessWidget {
                             // التعامل مع الأخطاء المترتبة على Firebase، مثل إذا كان المستخدم غير موجود أو كلمة المرور غير صحيحة
                             if (e.code == 'user-not-found') {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
+                                const SnackBar(
                                     content:
                                         Text('No user found for that email.')),
                               );
                             } else if (e.code == 'wrong-password') {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
+                                const SnackBar(
                                     content: Text(
                                         'Wrong password provided for that user.')),
                               );

@@ -1,5 +1,6 @@
 /// ToolData : [{"Img":"http://api.fit-lyft.com/Images/slider1.png","Title":"Fitlyft Application","Description":"Congratulations on taking a forward step to get in shape and feel great"},{"Img":"http://api.fit-lyft.com/Images/slider2.png","Title":"Have nice body","Description":"Congratulations on taking a forward step to get in shape and feel great"}]
 /// IsAdded : true
+library;
 
 class SlidersModel {
   SlidersModel({

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -118,7 +117,7 @@ hintStyle: const TextStyle(fontSize: 18,color: Colors.grey),
     width: 1
     ),
        ),
-        errorStyle: TextStyle(
+        errorStyle: const TextStyle(
           color: Colors.red,
 
         ),

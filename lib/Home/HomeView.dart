@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:untitled/Home/top_sports_details.dart';
 import 'package:untitled/Home/trainers_detail.dart';
 import 'package:untitled/Login_screen.dart';
+import 'package:untitled/models/get_sports_request.dart';
 import 'package:untitled/models/sliders_model.dart';
+import 'package:untitled/settingsView/settings_view.dart';
 
 import '../models/trainers_model.dart';
 import '../network_layer/api_manager.dart';
@@ -35,7 +37,7 @@ List<CardItem> items = [
 class HomeView extends StatefulWidget {
   static const String routeName = "HomeView";
 
-  HomeView({super.key});
+  const HomeView({super.key});
 
   @override
   _HomeViewState createState() => _HomeViewState();
@@ -51,35 +53,26 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    // Initialize the Future to fetch images from the API
     _sliderImagesFuture = ApiManager.fetchSource('carousel-url');
-    _teamImageFuture = ApiManager.fetchTeam('card-url');
-    trainers = ApiManager.fetchTeam('card-url');
     _trainersFuture = ApiManager.fetchTeam('card-url');
-    // _trainersFuture = [];
-    // ApiManager.fetchTeam('card-url'); // Fetch trainers from API
   }
-
-  //List<Trainers> trainers = [
-  // Trainers(
-  //   name: "Hassan",
-  // sports: "Sports supervisor",
-  //  urlAvatar: 'assets/image/image.jpg'),
-  //  Trainers(
-  //   name: "Ali", sports: "Trainer", urlAvatar: 'assets/image/image.jpg'),
-  //Trainers(
-  //   name: "Sara",
-  //  sports: "Yoga Instructor",
-  //    urlAvatar: 'assets/image/image.jpg'),
-  //];
 
   @override
   Widget build(BuildContext context) {
-    var mediaQuery = MediaQuery.of(context).size;
     User? user = FirebaseAuth.instance.currentUser;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.shopping_cart_rounded,
+              color: Colors.white,
+            ),
+            onPressed: () {
+            },
+          ),
+        ],
         backgroundColor: const Color(0xFF39A552),
         title: const Text(
           "FitLyft",
@@ -90,12 +83,12 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
         centerTitle: true,
-        toolbarHeight: 40,
+        toolbarHeight: 50,
         elevation: 0,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-            bottomRight: Radius.circular(25),
-            bottomLeft: Radius.circular(25),
+            bottomRight: Radius.circular(16),
+            bottomLeft: Radius.circular(16),
           ),
         ),
       ),
@@ -106,8 +99,10 @@ class _HomeViewState extends State<HomeView> {
               accountName: Text(user?.displayName ?? " "),
               accountEmail: Text(user?.email ?? "No Email"),
               currentAccountPicture: CircleAvatar(
-                backgroundImage: NetworkImage(user?.photoURL ??
-                    "https://www.example.com/default-avatar.png"),
+                backgroundImage: NetworkImage(
+                  user?.photoURL ??
+                      "https://www.example.com/default-avatar.png",
+                ),
               ),
               decoration: const BoxDecoration(
                 color: Colors.green,
@@ -166,6 +161,7 @@ class _HomeViewState extends State<HomeView> {
                 "Popular Classes",
                 style: TextStyle(
                   color: Colors.black,
+                  fontSize: 18,
                   fontStyle: FontStyle.italic,
                   fontWeight: FontWeight.w700,
                   fontFamily: "Poppins-Medium",
@@ -186,15 +182,21 @@ class _HomeViewState extends State<HomeView> {
                   if (snapshot.hasData) {
                     var imageUrls = snapshot.data!;
                     print("Fetched images: $imageUrls");
-                    if (imageUrls.isEmpty)
+                    if (imageUrls.isEmpty) {
                       return const Text("No images available");
+                    }
                     return Padding(
                       padding: const EdgeInsets.all(10),
                       child: CarouselSlider.builder(
-                        options: CarouselOptions(height: 200, autoPlay: true),
+                        options: CarouselOptions(
+                          autoPlay: true,
+                          aspectRatio: 1,
+                          enlargeCenterPage: true,
+                          enlargeFactor: 1.1,
+                        ),
                         itemCount: imageUrls.length,
                         itemBuilder: (context, index, realIndex) {
-                          return buildImage(imageUrls[index], index);
+                          return buildPopularImage(imageUrls[index], index);
                         },
                       ),
                     );
@@ -205,27 +207,39 @@ class _HomeViewState extends State<HomeView> {
               const SizedBox(height: 16),
               const Divider(),
               const SizedBox(height: 16),
-
               const Text(
                 "Top Sports",
                 style: TextStyle(
                   color: Colors.black,
+                  fontSize: 18,
                   fontStyle: FontStyle.italic,
                   fontWeight: FontWeight.w700,
                   fontFamily: "Poppins-Medium",
                 ),
               ),
               const SizedBox(height: 16),
-
-              SizedBox(
-                height: 200,
-                child: ListView.separated(
-                  itemCount: items.length,
-                  separatorBuilder: (context, _) => const SizedBox(width: 16),
-                  itemBuilder: (context, index) =>
-                      buildCard(items[index], context),
-                  scrollDirection: Axis.horizontal,
-                ),
+              FutureBuilder(
+                future: ApiManager.getSports(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasData) {
+                    var data = snapshot.data as GetSportsRequest;
+                    return SizedBox(
+                      height: 200,
+                      child: ListView.separated(
+                        itemCount: data.toolData.length,
+                        separatorBuilder: (context, _) =>
+                            const SizedBox(width: 16),
+                        itemBuilder: (context, index) =>
+                            buildSportsCard(data.toolData[index], context),
+                        scrollDirection: Axis.horizontal,
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
               ),
 
               const SizedBox(height: 16),
@@ -235,67 +249,102 @@ class _HomeViewState extends State<HomeView> {
                 "Top Trainers",
                 style: TextStyle(
                   color: Colors.black,
+                  fontSize: 18,
                   fontStyle: FontStyle.italic,
                   fontWeight: FontWeight.w700,
                   fontFamily: "Poppins-Medium",
                 ),
               ),
               const SizedBox(height: 16),
-              SizedBox(
-                height: 170,
-                child: FutureBuilder<List<InstructorData>>(
-                  future: _trainersFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    }
-                    if (snapshot.hasData) {
-                      var trainers = snapshot.data!;
-                      return ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: trainers.length,
-                        itemBuilder: (context, index) {
-                          final trainer = trainers[index];
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => TrainerFinalDetails(
-                                    trainer: trainer,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Card(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 16.0,horizontal: 8),
-                                child: Column(
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 40,
-                                      backgroundImage:
-                                          NetworkImage(trainer.img ?? ''),
-                                    ),
-                                    Text(trainer.fullName ?? 'Unknown'),
-                                    Text(trainer.position ?? 'No Position'),
-                                  ],
+              FutureBuilder<List<InstructorData>>(
+                future: _trainersFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
+                  if (snapshot.hasData) {
+                    var trainers = snapshot.data!;
+                    return ListView.separated(
+                      scrollDirection: Axis.vertical,
+                      itemCount: trainers.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        final trainer = trainers[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TrainerFinalDetails(
+                                  trainer: trainer,
                                 ),
                               ),
+                            );
+                          },
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 16.0,
+                                horizontal: 8,
+                              ),
+                              // child: Row(
+                              //   children: [
+                              //     CircleAvatar(
+                              //       radius: 40,
+                              //       backgroundImage:
+                              //           NetworkImage(trainer.img ?? ''),
+                              //     ),
+                              //     Text(trainer.fullName ?? 'Unknown'),
+                              //     Text(trainer.position ?? 'No Position'),
+                              //   ],
+                              // ),
+                              child: Row(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Image.network(
+                                      trainer.img ?? '',
+                                      width: 70,
+                                      height: 70,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (
+                                        context,
+                                        error,
+                                        stackTrace,
+                                      ) {
+                                        return const Icon(Icons.error);
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(trainer.fullName ?? 'Unknown'),
+                                      const SizedBox(height: 8),
+                                      Text(trainer.position ?? 'No Position'),
+                                    ],
+                                  ),
+                                  const Spacer(),
+                                  const Icon(Icons.arrow_forward_ios_rounded),
+                                ],
+                              ),
                             ),
-                          );
-                        },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return const SizedBox(width: 8);
-                        },
-                      );
-                    }
-                    return const Center(child: Text('No trainers available.'));
-                  },
-                ),
+                          ),
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return const SizedBox(height: 8);
+                      },
+                    );
+                  }
+                  return const Center(child: Text('No trainers available.'));
+                },
               ),
             ],
           ),
@@ -306,52 +355,47 @@ class _HomeViewState extends State<HomeView> {
 
   // Build Image for the Slider
 
-  Widget buildImage(ToolData tool, int index) {
-    return Container(
-      width: 200,
-      height: 300,
-      color: Colors.grey,
-      child: Stack(
-        children: [
-          CachedNetworkImage(
-            imageUrl: tool.img!,
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-            placeholder: (context, url) => const Center(
-              child: CircularProgressIndicator(),
-            ),
-            errorWidget: (context, url, error) => const Center(
-              child:
-                  Text('No image found', style: TextStyle(color: Colors.red)),
-            ),
-          ),
-        ],
+  Widget buildPopularImage(ToolData tool, int index) {
+    return CachedNetworkImage(
+      imageUrl: tool.img!,
+      fit: BoxFit.cover,
+      width: double.infinity,
+      height: double.infinity,
+      placeholder: (context, url) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      errorWidget: (context, url, error) => const Center(
+        child:
+            Text('No image found', style: TextStyle(color: Colors.red)),
       ),
     );
   }
 
-  // Build Card for Popular Classes
-  Container buildCard(CardItem item, BuildContext context) {
+  Widget buildSportsCard(SportModel item, BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: Colors.grey,
-          )),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.grey,
+        ),
+      ),
       child: GestureDetector(
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => TopSportsDetails(items: item),
+              builder: (context) => TopSportsDetails(
+                item: item,
+              ),
             ),
           );
         },
-        child: Image.asset(
-          item.urlImage,
+        child: Image.network(
+          item.img ?? "",
           fit: BoxFit.cover,
+          width: size.width / 2,
         ),
       ),
     );
@@ -365,14 +409,12 @@ class _HomeViewState extends State<HomeView> {
           backgroundImage: NetworkImage(trainer.img ?? ''),
         ),
         title: Text(
-          trainer.fullName?.isNotEmpty == true
-              ? trainer.fullName!
-              : "Unknown", // إذا كان الاسم فارغًا، عرض "Unknown"
+          trainer.fullName?.isNotEmpty == true ? trainer.fullName! : "Unknown",
         ),
         subtitle: Text(
           trainer.position?.isNotEmpty == true
               ? trainer.position!
-              : "Position not available", // إذا كانت الوظيفة فارغة، عرض "Position not available"
+              : "Position not available",
         ),
       ),
     );

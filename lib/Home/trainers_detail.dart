@@ -1,17 +1,13 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:untitled/Home/HomeView.dart';
-import 'package:untitled/models/trainers_final_details';
+import 'package:untitled/models/trainers_final_details.dart';
 import 'package:untitled/models/trainers_model.dart';
 import 'package:untitled/network_layer/api_manager.dart';
 
 class TrainerFinalDetails extends StatefulWidget {
   final InstructorData trainer;
 
-  const TrainerFinalDetails({Key? key, required this.trainer})
-      : super(key: key);
+  const TrainerFinalDetails({super.key, required this.trainer});
 
   @override
   State<TrainerFinalDetails> createState() => _TrainerFinalDetailsState();
@@ -29,15 +25,15 @@ class _TrainerFinalDetailsState extends State<TrainerFinalDetails> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('Trainer Details'),
+          title: const Text('Trainer Details'),
         ),
         body: Center(
           child: FutureBuilder(
-            future: ApiManager.featchTeamDetails(
+            future: ApiManager.fetchTeamDetails(
                 widget.trainer.instructorID!.toString()),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               }
               if (snapshot.hasData) {
                 var data = snapshot.data as TrainersFinalDetails;
@@ -60,7 +56,7 @@ class _TrainerFinalDetailsState extends State<TrainerFinalDetails> {
                                 radius: 50,
                                 backgroundImage: NetworkImage(data.poster!),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 16,
                               ),
                               Text(
@@ -84,9 +80,9 @@ class _TrainerFinalDetailsState extends State<TrainerFinalDetails> {
                         ),
 
 
-                        SizedBox(height: 16,),
+                        const SizedBox(height: 16,),
 
-                        Text(data.exp!, style: TextStyle(fontSize: 18)),
+                        Text(data.exp!, style: const TextStyle(fontSize: 18)),
                       ],
                     ),
 

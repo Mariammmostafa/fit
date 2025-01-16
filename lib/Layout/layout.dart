@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/Classes/Classes.dart';
 import 'package:untitled/Home/HomeView.dart';
-import 'package:untitled/Profile/Profile.dart';
 import 'package:untitled/Subscriptions/Subscriptions.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:untitled/settingsView/settings_view.dart';
@@ -26,13 +25,14 @@ class _LayoutState extends State<Layout> {
   }
 
   static List<Widget> listcustom = <Widget>[
-    HomeView(),
+    const HomeView(),
     const Classes(),
-    const Subscriptions(),
-    const Profile(),
+    // const Subscriptions(),
+    // const Profile(),
     const SettingsView(),
   ];
 
+  @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     var mediaQuery = MediaQuery.of(context);
@@ -44,35 +44,40 @@ class _LayoutState extends State<Layout> {
         // new
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-              icon: const Icon(
-                Icons.home,
-                color: Colors.green,
-              ),
-              label: AppLocalizations.of(context)!.home),
+            icon: const Icon(
+              Icons.home,
+              color: Colors.green,
+            ),
+            label: AppLocalizations.of(context)!.home,
+          ),
           BottomNavigationBarItem(
-              icon: const Icon(
-                Icons.class_rounded,
-                color: Colors.green,
-              ),
-              label: AppLocalizations.of(context)!.classes),
+            icon: const Icon(
+              Icons.class_rounded,
+              color: Colors.green,
+            ),
+            label: AppLocalizations.of(context)!.classes,
+          ),
+          // BottomNavigationBarItem(
+          //   icon: const Icon(
+          //     Icons.subscriptions_outlined,
+          //     color: Colors.green,
+          //   ),
+          //   label: AppLocalizations.of(context)!.subscriptions,
+          // ),
+          // BottomNavigationBarItem(
+          //   icon: const Icon(
+          //     Icons.person,
+          //     color: Colors.green,
+          //   ),
+          //   label: AppLocalizations.of(context)!.profile,
+          // ),
           BottomNavigationBarItem(
-              icon: const Icon(
-                Icons.subscriptions_outlined,
-                color: Colors.green,
-              ),
-              label: AppLocalizations.of(context)!.subscriptions),
-          BottomNavigationBarItem(
-              icon: const Icon(
-                Icons.person,
-                color: Colors.green,
-              ),
-              label: AppLocalizations.of(context)!.profile),
-          BottomNavigationBarItem(
-              icon: const Icon(
-                Icons.settings,
-                color: Colors.green,
-              ),
-              label: AppLocalizations.of(context)!.settings),
+            icon: const Icon(
+              Icons.settings,
+              color: Colors.green,
+            ),
+            label: AppLocalizations.of(context)!.settings,
+          ),
         ],
         currentIndex: selectedindex,
         selectedItemColor: Colors.green,

@@ -1,14 +1,9 @@
-
-
-
 class TrainersFinalDetails {
   String? fullName;
   String? position;
   String? poster;
   int? numOfCourse;
   String? exp;
-  
-  
 
   TrainersFinalDetails({
     this.fullName,
@@ -16,7 +11,6 @@ class TrainersFinalDetails {
     this.poster,
     this.numOfCourse,
     this.exp,
-   
   });
 
   // تحويل من JSON إلى كائن
@@ -26,10 +20,7 @@ class TrainersFinalDetails {
     poster = json['poster'];
     numOfCourse = json['numofcourse'];
     exp = json['exp'];
-    
-      
-    }
-  
+  }
 
   // تحويل من كائن إلى JSON
   Map<String, dynamic> toJson() {
@@ -39,7 +30,7 @@ class TrainersFinalDetails {
     data['poster'] = poster;
     data['numofcourse'] = numOfCourse;
     data['exp'] = exp;
-    
-   return data;
+
+    return data;
   }
 }

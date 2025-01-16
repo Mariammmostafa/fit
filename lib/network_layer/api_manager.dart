@@ -1,18 +1,11 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-import 'package:untitled/core/constants.dart'; // تأكد من تعريف الـ baseURL بشكل صحيح في Constants
+import 'package:untitled/models/get_sports_request.dart';
 import 'package:untitled/models/sliders_model.dart';
 import 'package:untitled/models/sport_class_model.dart';
+import 'package:untitled/models/trainers_final_details.dart';
 import 'package:untitled/models/trainers_model.dart';
-import 'package:xml/xml.dart';
-
-import '../Home/trainers_detail.dart';
-import '../models/trainers_final_details';
-
-// إضافة مكتبة xml لتحليل XML
 
 class ApiManager {
   static Future<List<ToolData>> fetchSource(String urlImages) async {
@@ -55,27 +48,7 @@ class ApiManager {
     }
   }
 
-  // static Future<>> fetchTeam2(String urlImages) async {
-  //   var dio = Dio();
-  //   dio.interceptors.addAll([PrettyDioLogger()]);
-
-  //   try {
-  //     log("tesssssst");
-  //     var res =
-  //     await dio.get("http://api.fit-lyft.com//Usersasmx.asmx/GetOurDetailsTeam");
-  //     log(res.data.toString());
-  //     return (res.data["ToolData"] as List).map((e) {
-  //       return .fromJson(e);
-  //     },).toList();
-  //   } catch (e) {
-  //     print(e);
-
-  //     print("خطأ في الاتصال: $e");
-  //     throw Exception('فشل في جلب البيانات: $e');
-  //   }
-  // }
-
-  static featchTeamDetails(String id) async {
+  static fetchTeamDetails(String id) async {
     var dio = Dio();
     dio.interceptors.addAll([PrettyDioLogger()]);
     try {
@@ -98,6 +71,33 @@ class ApiManager {
     try {
       var response = await dio.get(
         "http://api.fit-lyft.com//Usersasmx.asmx/GetSportsClasses",
+      );
+      var data = GetSportClassRequest.fromJson(response.data);
+      return data;
+    } catch (_) {}
+  }
+
+  static getSports() async {
+    var dio = Dio();
+    dio.interceptors.addAll([PrettyDioLogger()]);
+    try {
+      var response = await dio.get(
+        "http://api.fit-lyft.com/Usersasmx.asmx/GetSports",
+      );
+      var data = GetSportsRequest.fromJson(response.data);
+      return data;
+    } catch (_) {}
+  }
+
+  static getClassesBySport(String sportNumber) async {
+    var dio = Dio();
+    dio.interceptors.addAll([PrettyDioLogger()]);
+    try {
+      var response = await dio.get(
+        "http://api.fit-lyft.com/Usersasmx.asmx/GetClassesbySports",
+        queryParameters: {
+          "sport_number": sportNumber,
+        },
       );
       var data = GetSportClassRequest.fromJson(response.data);
       return data;

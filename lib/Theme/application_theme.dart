@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -39,25 +38,25 @@ static ThemeData Lighttheme= ThemeData(
       color: Colors.white,
 
     ),
-      titleMedium: TextStyle(
+      titleMedium: const TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w600,
       //  color: primaryColor,
 
       ),
-      bodyLarge: TextStyle(
+      bodyLarge: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w500,
         color: Color(0xFF1B5E20),
 
       ),
-     bodyMedium: TextStyle(
+     bodyMedium: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w400,
         color: Color(0xFF1B5E20),
 
       ),
-      bodySmall: TextStyle(
+      bodySmall: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w300,
         color: Color(0xFF1B5E20),

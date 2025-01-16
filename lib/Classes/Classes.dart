@@ -1,11 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:untitled/Home/widgets/SportClassWidget.dart';
 import 'package:untitled/models/sport_class_model.dart';
 
 import '../network_layer/api_manager.dart';
-import 'Classes.dart';
 
 class Classes extends StatelessWidget {
   const Classes({super.key});
@@ -30,7 +28,7 @@ class Classes extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: GridView.builder(
-                    itemCount: data.toolData!.length,
+                    itemCount: data.toolData.length,
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                      childAspectRatio: 1/1.3,
@@ -38,13 +36,13 @@ class Classes extends StatelessWidget {
                       crossAxisSpacing: 8.0,
                     ),
                     itemBuilder: (BuildContext context, int index) {
-                      return Sportclasswidget(data: data.toolData![index]);
+                      return SportClassWidget(data: data.toolData[index]);
                     },
                   ),
                 ),
               );
             }
-            return Text("Something went wrong");
+            return const Text("Something went wrong");
           },
         ),
       ),

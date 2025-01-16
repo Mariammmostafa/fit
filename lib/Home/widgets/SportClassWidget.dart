@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:untitled/models/sport_class_model.dart';
 
-class Sportclasswidget extends StatelessWidget {
+class SportClassWidget extends StatelessWidget {
   final SportsClassModel data;
-  const Sportclasswidget({super.key, required this.data});
+
+  const SportClassWidget({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(4),
@@ -18,6 +19,8 @@ class Sportclasswidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
                 data.poster!,
+                fit: BoxFit.cover,
+                height: size.height / 7,
               ),
             ),
             const SizedBox(
@@ -30,7 +33,6 @@ class Sportclasswidget extends StatelessWidget {
             Row(
               children: [
                 const Text("Days: "),
-               
                 Expanded(
                   child: Text(
                     data.days!,

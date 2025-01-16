@@ -31,7 +31,7 @@ class SelectedOptionWidget extends StatelessWidget {
          mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
        Text(selectedTitle),
-      Icon(Icons.check_circle, color:Colors.black ),
+      const Icon(Icons.check_circle, color:Colors.black ),
       ],
     ),
     );
