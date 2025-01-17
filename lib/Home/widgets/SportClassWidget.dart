@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/models/sport_class_model.dart';
+import 'package:untitled/sport_class_details/sport_class_details.dart';
 
 class SportClassWidget extends StatelessWidget {
   final SportsClassModel data;
@@ -9,51 +10,65 @@ class SportClassWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(4),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                data.poster!,
-                fit: BoxFit.cover,
-                height: size.height / 7,
-              ),
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Text(data.className!),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                const Text("Days: "),
-                Expanded(
-                  child: Text(
-                    data.days!,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return SportClassDetails(
+                classNumber: data.classNumber.toString(),
+              );
+            },
+          ),
+        );
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(4),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  data.poster!,
+                  fit: BoxFit.cover,
+                  height: size.height / 7,
                 ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                Text("${data.hours}Hours"),
-                const SizedBox(width: 4),
-                Icon(Icons.schedule, color: Colors.green.shade600),
-                const Spacer(),
-                Text("${data.price} Egp"),
-              ],
-            ),
-          ],
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Text(data.className!),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  const Text("Days: "),
+                  Expanded(
+                    child: Text(
+                      data.days!,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Text("${data.hours}Hours"),
+                  const SizedBox(width: 4),
+                  Icon(Icons.schedule, color: Colors.green.shade600),
+                  const Spacer(),
+                  Text("${data.price} Egp"),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

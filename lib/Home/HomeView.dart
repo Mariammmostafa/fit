@@ -3,7 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:untitled/Home/cart.dart';
+import 'package:untitled/cart/cart.dart';
 import 'package:untitled/Home/top_sports_details.dart';
 import 'package:untitled/Home/trainers_detail.dart';
 import 'package:untitled/Login_screen.dart';
@@ -74,10 +74,9 @@ class _HomeViewState extends State<HomeView> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>Cart(),
+                  builder: (context) => const CartScreen(),
                 ),
               );
-
             },
           ),
         ],
@@ -373,8 +372,7 @@ class _HomeViewState extends State<HomeView> {
         child: CircularProgressIndicator(),
       ),
       errorWidget: (context, url, error) => const Center(
-        child:
-            Text('No image found', style: TextStyle(color: Colors.red)),
+        child: Text('No image found', style: TextStyle(color: Colors.red)),
       ),
     );
   }

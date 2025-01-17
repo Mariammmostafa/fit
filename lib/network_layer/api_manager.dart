@@ -3,9 +3,11 @@ import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:untitled/models/get_sports_request.dart';
 import 'package:untitled/models/sliders_model.dart';
+import 'package:untitled/models/sport_class_details_model.dart';
 import 'package:untitled/models/sport_class_model.dart';
 import 'package:untitled/models/trainers_final_details.dart';
 import 'package:untitled/models/trainers_model.dart';
+import 'package:untitled/sport_class_details/sport_class_details.dart';
 
 class ApiManager {
   static Future<List<ToolData>> fetchSource(String urlImages) async {
@@ -100,6 +102,21 @@ class ApiManager {
         },
       );
       var data = GetSportClassRequest.fromJson(response.data);
+      return data;
+    } catch (_) {}
+  }
+
+  static getSportClassDetails(String classNumber) async {
+    var dio = Dio();
+    dio.interceptors.addAll([PrettyDioLogger()]);
+    try {
+      var response = await dio.get(
+        "http://api.fit-lyft.com/Usersasmx.asmx/GetSportsClassesdetails",
+        queryParameters: {
+          "class_number": classNumber,
+        },
+      );
+      var data = SportClassDetailsModel.fromJson(response.data);
       return data;
     } catch (_) {}
   }

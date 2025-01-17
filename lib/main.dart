@@ -45,7 +45,17 @@ class MyApp extends StatelessWidget {
       locale: Locale(appProvider.currentLocal),
       initialRoute: LoginScreen.routeName,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+        cardColor: Colors.white,
+        // bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        //   backgroundColor: Colors.green,
+        // ),
+        appBarTheme: const AppBarTheme(
+          color: Colors.white,
+        ),
+        cardTheme: const CardTheme(
+          color: Colors.white,
+        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         scaffoldBackgroundColor: Colors.white,
       ),
       routes: {
